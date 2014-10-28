@@ -1,0 +1,40 @@
+CACHE MANIFEST
+# 2014-10-14 v0.6.2
+FALLBACK:
+/ ./offline.htm
+NETWORK:
+*
+CACHE:
+./logo.ico
+./img/file_sprite.png
+./img/logo.png
+./js/jquery.js
+./js/jstree.min.js
+./js/homeV3.js
+./js/bootstrap.js
+./js/jspdf.js
+./js/libs/FileSaver.js/FileSaver.js
+./js/jspdf.plugin.cell.js
+./js/jspdf.plugin.standard_fonts_metrics.js
+./js/jspdf.plugin.split_text_to_size.js
+./js/jspdf.plugin.from_html.js
+./css/32px.png
+./css/40px.png
+./css/reset.css
+./css/bootstrap.css
+./css/docs.min.css
+./css/bootstrap-theme.min.css
+./css/font-awesome.css
+./css/style.css
+./css/style.min.css
+./xml/sabrowser.xml
+./xml/other_na.xml
+./xml/definition_aplicacao.xml
+./xml/diagram_modelos_de_referencia.xml
+./xml/definition_pessoa.xml
+./xml/definition_modulo.xml
+./xml/definition_tam_area.xml
+./xml/definition_trm_service_category.xml
+./xml/definition_trm_service_standard.xml
+./xml/definition_tam_area.xml
+

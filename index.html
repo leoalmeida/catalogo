@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html manifest="cache.manifest">
+<head>
+	<title>Cat&aacute;logo de Aplica&ccedil;&otilde;es</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width" />
+	<meta charset="utf-8">
+	 <!-- CSS -->
+	<link rel="stylesheet" href="./css/reset.css">
+	<link rel="stylesheet" href="./css/style.min.css" />
+	<!-- BOOTSTRAP STYLE -->
+	<link rel="stylesheet" href="./css/bootstrap.css">
+	<link rel="stylesheet" href="./css/docs.min.css">
+	<link rel="stylesheet" href="./css/font-awesome.css">
+	<link rel="stylesheet" href="./css/bootstrap-theme.min.css">	
+	<link rel="stylesheet" href="./css/style.css" >
+		
+	<!-- JS FILES -->
+	<script type="text/javascript" src="./js/ydn.db-is-core-qry.js"></script>	
+	<link rel="icon" type="./image/ico" href="./logohtml5.ico" />
+	<link rel="shortcut icon" href="./logohtml5.ico" />
+	<style>
+	#jstree_menu .folder { background:url('./img/file_sprite.png') right bottom no-repeat; }
+	#jstree_menu .file { background:url('./img/file_sprite.png') 0 0 no-repeat; }
+	#jstree_menu .file-xls, .file-xlsx { background-position: -362px -0px }
+	#jstree_menu .file-doc,  .file-docx { background-position: -362px -18px }
+	#jstree_menu .file-pdf { background-position: -18px -0px }
+	.file-pdf { background-position: -18px -0px }
+	</style>
+		
+</head>
+
+<body id="voltarTopo">
+	<div class="navbar navbar-inverse navbar-fixed-top" role="header">
+		<button type="button" id="toggle" class="navbar-toggle" data-toggle="collapse" data-target=".bs-navbar-collapse">
+			    <span class="sr-only">Toggle navigation</span>
+			    <span class="icon-bar"></span>
+			    <span class="icon-bar"></span>
+			    <span class="icon-bar"></span>
+		</button>
+		<div class="navbar-header navbar-left">
+			<a href="#" class="navbar-brand">
+				<img src="./img/logohtml5.png" style="height: 40px; width: 40px" /><span>Cat&aacute;logo de Aplica&ccedil;&otilde;es</span>
+			</a>
+		</div>
+	</div>
+	<div class="container theme-showcase" role="main">
+		<div class="modal-header clearfix">
+			<a href="#"  class="text-primary">HTML5 corp</a>
+			<button type="button" id='turnon' class='btn btn-xs btn-success' onClick="toggleStatus()">Online</button>
+			<button type="button" id='update' class='btn btn-xs btn-default' onClick="updateDB()">Update</button>							
+			<h6 class="pull-right">
+				<span class='label label-info'>APP: <span class='badge' id='appVersion'>0</span></span>				
+				<span class='label label-info'>BD: <span class='badge' id='dbVersion'>0</span></span>
+			</h6>
+			
+				<div>
+				    <ul id="applicationItems"></ul>
+				</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4" id="menu">
+				<div class="busca">
+					<h2>Menu</h2>								
+					<input type='search' results=5 autosave='searchq' name='q' id='searchq' placeholder='Search...'>		
+				</div>
+				<div class="nav navbar-form navbar-left">
+					<div id="jstree_menu" visibility = "hidden">
+						<ul class="nav navbar-nav" id="root">
+							<!-- Links -->
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8" id="main">
+					<div id="online">						
+						<div class="btn-group pull-right">									
+							<button type="button" id="menu" class="btn btn-primary" onClick="geraPDF()"><span class="file-pdf">Download PDF</span></button>			
+						</div>
+						<div class="panel panel-primary" id="painel">			
+							<!-- Default panel contents -->
+							<div class="panel-heading" id="hdr">
+							</div>					
+							<div class="panel-body" >					
+								<table class="table table-striped" id="frameMain">			
+								</table>
+							</div>
+							<div class="panel-footer" id="ftr"></div>						
+						</div>
+					</div>
+					<div id="offline">
+						<div class="panel inner cover">
+						    <h1 class="cover-heading">OFF-LINE.</h1>
+						    <p class="lead">Voc&ecirc; est&aacute; off-line</p>
+						    <p class="lead">Para acessar essa p&aacute;gina, voc&ecirc; precisa de uma conex&atilde;o com a internet</p>						   
+						</div>
+					
+						<div class="mastfoot">
+						    <div class="inner">
+						      <p>HTML5 Corp</p>
+						    </div>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>	
+	<div class="navbar-fixed-bottom">
+		<div class="alert alert-info alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<a href="http://arquitetura/conteudo_site/Aplicacoes/"><strong>Deseja acessar a vers&#227;o original?</strong></a>
+		</div>
+		<button type="button" class="btn btn-default btn-lg voltarTopo" onclick="$('html,body').animate({scrollTop: $('#voltarTopo').offset().top}, 2000);">
+			  <span class="glyphicon glyphicon-chevron-up"></span> Subir
+		</button>
+	</div>	
+	
+	
+	 <!-- JS -->
+	<script type="text/javascript" src="./js/jquery.js"></script>
+	<script type="text/javascript" src="./js/jstree.min.js"></script>
+	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./js/homeV3.js"></script>
+	<script type="text/javascript" src="./js/jspdf.js"></script>	
+	<script type="text/javascript" src="./js/offline.js"></script>
+	<script type="text/javascript" src="./js/libs/FileSaver.js/FileSaver.js"></script>
+	<script type="text/javascript" src="./js/jspdf.plugin.cell.js"></script>
+	<script type="text/javascript" src="./js/jspdf.plugin.standard_fonts_metrics.js"></script> 
+	<script type="text/javascript" src="./js/jspdf.plugin.split_text_to_size.js"></script>               
+	<script type="text/javascript" src="./js/jspdf.plugin.from_html.js"></script>
+	<script type="text/javascript" src="./js/jquery.csv-0.71.min.js"></script>
+		
+</body>
+</html>
