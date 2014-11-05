@@ -3,12 +3,11 @@ var menuCreationSize=0;
 var xmlfolder="./xml/";
 var endpointInfo="./";
 
-
 String.prototype.stripHTML = function() {return this.replace(/<.*?>/g, '').replace(/&nbsp;/g,'')}
 
 $(".voltarTopo").hide();
-$("#online").hide();
-$("#offline").hide();
+//$("#online").hide();
+//$("#offline").hide();
 
 $(window).resize(function () {
 	var h = Math.max($(window).height() - 0, 420);
@@ -26,52 +25,7 @@ $('#toggle').on('click', function () {
 	$("#menu").fadeToggle("fast" );
 });
 
-//Serviços para requisição Online
-$(document).ready(function(){
-	$.ajax({
-		url: xmlfolder+"sabrowser.xml",
-	   dataType: "xml",
-	   success: function(xml){
-		//List Creation Code Starts		
-		var htmlCode = " ";
-		var id = "";
-		
-		$(xml).find('folder').each(function(index){
-			//if ((index == '0') || (index == '10')) continue;			
-			var sName = $(this).attr('name');			
-			var sLink = $(this).find('link').attr('url');			
-			id = "lista"+index;
-			htmlCode = htmlCode + "<li data-jstree='{\"icon\":\"folder\"}'>"+sName;
-			htmlCode = htmlCode + "<ul id=\""+id+"\"></ul>";
-			//criaMenu(sLink);
-			htmlCode = htmlCode + "</li>";
-			menuCreationSize++;
-		});		
-		$('#root').append(htmlCode);
-				
-		var listNumber=0;
-		criaMenuItem("definition_aplicacao.xml", listNumber++);
-		criaRelatorios(listNumber++);
-		//criaMenuItem("other_na.xml");
-		criaMenuItem("diagram_modelos_de_referencia.xml",listNumber++);
-		criaMenuItem("definition_pessoa.xml",listNumber++);
-		criaMenuItem("definition_modulo.xml",listNumber++);
-		criaMenuItem("definition_tam_area.xml",listNumber++);
-		criaMenuItem("definition_trm_service_category.xml",listNumber++);
-		criaMenuItem("definition_trm_service_standard.xml",listNumber++);
-		criaMenuItem("definition_tam_area.xml",listNumber++);
-	},
-	   error: function(xhr, ajaxOptions, thrownError) {
-	      alert("Ocorreu um erro ao abrir o portal.Tente novamente");
-	      alert(thrownError);
-	}
-	});	
-});
-//List Creation Code Ends
-
-//$("#frameMain").height = $("#frameMain").contentWindow.document.body.scrollHeight + 'px';
-
-function executaServico(pagina) {
+function mostraDetalhes(opcao) {
 	mostrapainel();
 	$.ajax({
 	   url: endpointInfo+pagina,
@@ -103,77 +57,6 @@ function executaServico(pagina) {
 	});
 };
 
-function executaRelatorio(pagina) {
-	mostrapainel();
-	$.ajax({
-	   url: endpointInfo+pagina,
-	   dataType: "text",
-	   success: function(xml){
-		//List Creation Code Starts		
-		
-		$('.panel-heading').html($(xml).find('h1#pageTitle').text());
-		
-		//var htmlCode = "<thead>"+$(xml).find('h1#pageTitle').text()+"</thead>";		
-		var htmlCode = $(xml).find('#maindata').get(0).innerHTML;
-		htmlCode += $(xml).find("h3:contains('Count:')" ).get(0).innerHTML;		
-		$('#frameMain').html(htmlCode);
-		$('tr').filter(function() {
-				return $.trim($(this).text()) === '' && $(this).children().length == 0
-			}).remove()
-		$('.panel-footer').html($(xml).find("h3:contains('Count:')" ).get());
-		
-	   },
-	   error: function(xhr, ajaxOptions, thrownError) {
-		   alert("Ocorreu um erro ao abrir o portal.Tente novamente");      
-	   }
-	});
-};
-
-function criaMenuItem(link,listNumber) {
-	$.ajax({
-	   url: xmlfolder+link,
-	   dataType: "xml",
-	   success: function(xml){
-		//List Creation Code Starts
-		var htmlCode = " ";
-		$(xml).find('folder').each(function(index){
-			var sName = $(this).attr('name');
-			var sLink = $(this).find('link').attr('url');
-			htmlCode = htmlCode + "<li data-jstree='{\"icon\":\"file\"}'><a href='#' onClick=\"executaServico('"+sLink+"')\">"+sName+"</a></li>";
-			//htmlCode = htmlCode + "<li data-jstree='{\"icon\":\"file\"}'><a href=\"#\" onclick=\"load_home('../"+sLink+"')\">"+sName+"</a></li>";
-			 
-		});
-		$('ul#lista'+listNumber).append(htmlCode);		
-		
-		menuItemCriado();
-	   },
-	   error: function(xhr, ajaxOptions, thrownError) {
-		   alert("Ocorreu um erro ao abrir o portal.Tente novamente");      
-	   }
-	});
-}
-function criaRelatorios(listNumber) {
-	$.ajax({
-	   url: xmlfolder+"other_na.xml",
-	   dataType: "xml",
-	   success: function(xml){
-		//List Creation Code Starts
-		var htmlCode = " ";			
-		$(xml).find('leaf').each(function(index){			
-			var sName = $(this).attr('name');
-			var sLink = $(this).find('link').attr('url');
-			htmlCode = htmlCode + "<li data-jstree='{\"icon\":\"file file-pdf\"}'><a href='#' onClick=\"executaRelatorio('"+sLink+"')\">"+sName+"</a></li>";
-			//htmlCode = htmlCode  + "<li data-jstree='{\"icon\":\"file file-xls\"}'><a href='../"+sLink+"' target=\"frameMain\">"+sName+"</a></li>";			
-		});		
-		$('ul#lista'+listNumber).append(htmlCode);
-		menuItemCriado();				
-	   },
-	   error: function(xhr, ajaxOptions, thrownError) {
-		   alert("Ocorreu um erro ao abrir o portal.Tente novamente");      
-	   }
-	});
-};
-
 function menuItemCriado() {
 	menuCreationSize--;
 	if (!menuCreationSize) criaMenu();	
@@ -182,19 +65,147 @@ function criaMenu() {
 	// create the menu instance
 	$("#jstree_menu").jstree(
 		{
-		  "core" : {
-			'themes' : {
-				'responsive' : false,
+			"plugins" : [  "themes", "json_data", "search", "state", "dnd", "checkbox", "sort", "contextmenu", "unique", "ui"],
+			"json_data": {
+				"ajax": {
+					'url': '/json_demo_roots.json',
+					'type': 'GET',
+					'data': function(node) {
+					    return {
+						'nodeId': node.attr ? node.attr("id") : ''
+					    };
+					}
+				},
+				"progressive_render": true,
+				"progressive_unload": false
+			},
+			"themes" : {
+				'responsive' : true,
 				'variant' : 'small'
-			}
-		  },		  
-		  "state" : { 	"key" : "menuCatalogo",
-				"ttl" : "86400000"},
-		  "search" : { "show_only_matches" : true },			 
-		  "plugins" : [ "search", "state", "html_data", "ui", "themes"]
-		  
+			},
+			"core" : {
+				"multiple" : false			
+			},
+			"check_callback" : function(o, n, p, i, m) {
+				if(m && m.dnd && m.pos !== 'i') { return false; }
+				if(o === "move_node" || o === "copy_node") {
+					if(this.get_node(n).parent === this.get_node(p).id) { return false; }
+				}
+				return true;
+			},
+			"sort" : function(a, b) {
+				return this.get_type(a) === this.get_type(b) ? (this.get_text(a) > this.get_text(b) ? 1 : -1) : (this.get_type(a) >= this.get_type(b) ? 1 : -1);
+			},
+			"contextmenu" : {
+				"items" : function(node) {
+					var tmp = $.jstree.defaults.contextmenu.items();
+					delete tmp.create.action;
+					tmp.create.label = "New";
+					tmp.create.submenu = {
+						"create_folder" : {
+							"separator_after"	: true,
+							"label"			: "Folder",
+							"action"		: function (data) {
+								var inst = $.jstree.reference(data.reference),
+									obj = inst.get_node(data.reference);
+								inst.create_node(obj, { type : "default" }, "last", function (new_node) {
+									setTimeout(function () { inst.edit(new_node); },0);
+								});
+							}
+						},
+						"create_file" : {
+							"label"				: "File",
+							"action"			: function (data) {
+								var inst = $.jstree.reference(data.reference),
+									obj = inst.get_node(data.reference);
+								inst.create_node(obj, { type : "file" }, "last", function (new_node) {
+									setTimeout(function () { inst.edit(new_node); },0);
+								});
+							}
+						}
+					};
+					if(this.get_type(node) === "file") {
+						delete tmp.create;
+					}
+					return tmp;
+				}
+			},		  
+			"unique" : {
+				"duplicate" : function (name, counter) {
+					return name + ' ' + counter;
+				}
+			},
+			"state" : { "key" : "menuCatalogo", "ttl" : "86400000"},
+			"search" : { "show_only_matches" : true }
 		}
-	).bind("select_node.jstree", function (e, data) {
+	).on('delete_node.jstree', function (e, data) {
+		$.get('?operation=delete_node', { 'id' : data.node.id })
+			.fail(function () {
+				data.instance.refresh();
+			});
+	}).on('create_node.jstree', function (e, data) {
+		$.get('?operation=create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
+			.done(function (d) {
+				data.instance.set_id(data.node, d.id);
+			})
+			.fail(function () {
+				data.instance.refresh();
+			});
+	}).on('rename_node.jstree', function (e, data) {
+		$.get('?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
+			.fail(function () {
+				data.instance.refresh();
+			});
+	}).on('move_node.jstree', function (e, data) {
+		$.get('?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
+			.fail(function () {
+				data.instance.refresh();
+			});
+	}).on('copy_node.jstree', function (e, data) {
+		$.get('?operation=copy_node', { 'id' : data.original.id, 'parent' : data.parent, 'position' : data.position })
+			.always(function () {
+				data.instance.refresh();
+			});
+	}).on('changed.jstree', function (e, data) {
+		if(data && data.selected && data.selected.length) {
+			$.get('?operation=get_content&id=' + data.selected.join(':'), function (d) {
+				if(d && typeof d.type !== 'undefined') {
+					$('#data .content').hide();
+					switch(d.type) {
+						case 'text':
+						case 'txt':
+						case 'md':
+						case 'htaccess':
+						case 'log':
+						case 'sql':
+						case 'php':
+						case 'js':
+						case 'json':
+						case 'css':
+						case 'html':
+							$('#data .code').show();
+							$('#code').val(d.content);
+							break;
+						case 'png':
+						case 'jpg':
+						case 'jpeg':
+						case 'bmp':
+						case 'gif':
+							$('#data .image img').one('load', function () { $(this).css({'marginTop':'-' + $(this).height()/2 + 'px','marginLeft':'-' + $(this).width()/2 + 'px'}); }).attr('src',d.content);
+							$('#data .image').show();
+							break;
+						default:
+							$('#data .default').html(d.content).show();
+							break;
+					}
+				}
+			});
+		}
+		else {
+			$('#data .content').hide();
+			$('#data .default').html('Select a file from the tree.').show();
+		}
+	}).bind("select_node.jstree", function (e, data) {
 	    var href = data.instance.get_node(data.node, true).children('a').attr('href');
 	    // this will load content into a div:
 	    //$("#frameMain").src = href;
@@ -255,7 +266,7 @@ function geraPDF(){
 	doc.setProperties({
 		title: 'PDF exporter',
 		subject: '',		
-		author: 'Arquitetura de TI',
+		author: '',
 		keywords: 'generated, arquitetura, catálogo de aplicações',
 		creator: 'Portal de Arquitetura'
 	});
@@ -305,4 +316,15 @@ function tableToJson(table) {
     return data;
 };
 //Fim de métodos de controle de PDF
+//Dropzone configuration
+Dropzone.options.myDropzone = {
+  paramName: "file", // The name that will be used to transfer the file
+  maxFilesize: 2, // MB
+  accept: function(file, done) {
+    if (file.name == "justinbieber.jpg") {
+      done("Naha, you don't.");
+    }
+    else { done(); }
+  }
+};
 
